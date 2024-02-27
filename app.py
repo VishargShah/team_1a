@@ -7,6 +7,7 @@ Created on Tue Feb 27 06:27:57 2024
 
 import streamlit as st
 import pandas as pd
+import json
 from io import StringIO
 import imports, uuid, os
 from pathlib import Path as p
@@ -24,10 +25,11 @@ PROJECT_ID = "b-hack-414814"
 LOCATION = "us-central1"
 vertexai.init(project=PROJECT_ID, location=LOCATION)
 random_uuid_1 = uuid.uuid4()
-random_uuid_2 = str(random_uuid_1) + "test_cases.text"
+random_uuid_2 = str(random_uuid_1) + "test_cases.json"
 model = GenerativeModel("gemini-1.0-pro")
 
 def extract_dynamic_keys_and_values(obj):
+    print(obj)
     data = {}
     for key, value in obj.items():
         data[key] = value
@@ -96,8 +98,10 @@ if uploaded_file is not None:
     """ + file_content
     testcases = model.generate_content(prompt, stream=True)
     for testcase in testcases:
-        with open('test_cases/'+random_uuid_2, 'a') as f:
-            f.write(testcase.text)  
+        with open('data.json', 'w') as f:
+            json.dump(testcase, f)
+        #with open('test_cases/'+random_uuid_2, 'a') as f:
+        #    f.write(testcase.text)  
     f = open('test_cases/'+random_uuid_2, "r")
     st.write(f.read())
     
