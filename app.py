@@ -55,7 +55,7 @@ for testcase in testcases:
     with open('temp/'+str(random_uuid)+'.text', 'a') as f:
         f.write(testcase.text)  
 f = open('temp/'+str(random_uuid)+'.text', "r")
-st.write('temp/'+str(random_uuid)+'.text'.read())
+st.write(f.read())
 
 files = glob.glob('temp/*')
 for f in files:
