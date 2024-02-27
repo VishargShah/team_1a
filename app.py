@@ -15,7 +15,7 @@ from vertexai.generative_models import GenerationConfig, GenerativeModel, Image,
 PROJECT_ID = "b-hack-414814"
 LOCATION = "us-central1"
 vertexai.init(project=PROJECT_ID, location=LOCATION)
-
+random_uuid = uuid.uuid4()
 model = GenerativeModel("gemini-1.0-pro")
 # Allow user to upload a Python file
 uploaded_file = st.file_uploader("Upload a Python file")
@@ -25,7 +25,6 @@ if uploaded_file is not None:
     file_content = uploaded_file.getvalue().decode("utf-8")
     # Execute the code dynamically
     exec(file_content)
-    random_uuid = uuid.uuid4()
     if uploaded_file is not None:
         # Read audio file:
         code_bytes = uploaded_file.read()
