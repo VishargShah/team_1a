@@ -53,6 +53,7 @@ def perform_tests(func, data):
     data = data[7:]
     data = data[:-3]
     print(data)
+    data = list(data)
     for item in data:
         key_value_pairs = extract_dynamic_keys_and_values(item)
         # Assume you have a separate function named `your_test_function`
