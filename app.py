@@ -50,8 +50,8 @@ def perform_tests(func, data):
     """
  
     results = []
+    print(data)
     for item in data:
-        print(item)
         key_value_pairs = extract_dynamic_keys_and_values(item)
         # Assume you have a separate function named `your_test_function`
         # that takes the extracted values as input and performs testing.
