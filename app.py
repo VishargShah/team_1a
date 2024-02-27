@@ -20,7 +20,8 @@ p(data_folder).mkdir(parents=True, exist_ok=True)
 PROJECT_ID = "b-hack-414814"
 LOCATION = "us-central1"
 vertexai.init(project=PROJECT_ID, location=LOCATION)
-random_uuid = uuid.uuid4()
+random_uuid_1 = uuid.uuid4()
+random_uuid_2 = str(random_uuid_1) + "test_cases.text"
 model = GenerativeModel("gemini-1.0-pro")
 # Allow user to upload a Python file
 uploaded_file = st.file_uploader("Upload a Python file")
@@ -36,7 +37,7 @@ if uploaded_file is not None:
         # 5. Generate unique filename
         filename = f"{uploaded_file.name}"
         # Write on local
-        with open('temp/'+str(random_uuid)+'.text', mode="wb") as f:
+        with open('temp/'+str(random_uuid_1)+'.text', mode="wb") as f:
             f.write(code_bytes)        
         # Print success message
         st.success(f"File uploaded successfully: {filename}")
@@ -44,21 +45,18 @@ if uploaded_file is not None:
         st.info("Please upload a .py file.")
     # Optionally, display the code content
     st.code(file_content, language="python")
-
-
-prompt = """write test cases in .json for below python code """ + """
- 
-""" + file_content
-
-testcases = model.generate_content(prompt, stream=True)
-for testcase in testcases:
-    with open('temp/'+str(random_uuid)+'.text', 'a') as f:
-        f.write(testcase.text)  
-f = open('temp/'+str(random_uuid)+'.text', "r")
-st.write(f.read())
-
-files = glob.glob('temp/*')
-for f in files:
-    os.remove(f)
+    prompt = """write test cases in .json for below python code """ + """
+     
+    """ + file_content
+    testcases = model.generate_content(prompt, stream=True)
+    for testcase in testcases:
+        with open('temp/'+random_uuid_2, 'a') as f:
+            f.write(testcase.text)  
+    f = open('temp/'+random_uuid_2, "r")
+    st.write(f.read())
+    
+    files = glob.glob('temp/*')
+    for f in files:
+        os.remove(f)
 
  
