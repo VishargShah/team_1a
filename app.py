@@ -14,8 +14,11 @@ import vertexai, glob
 from vertexai.generative_models import GenerationConfig, GenerativeModel, Image, Part
 
 #Initializing Directory
-data_folder = p.cwd() / "temp"
+data_folder = p.cwd() / "test_cases"
 p(data_folder).mkdir(parents=True, exist_ok=True)
+data_folder = p.cwd() / "code_files"
+p(data_folder).mkdir(parents=True, exist_ok=True)
+
 
 PROJECT_ID = "b-hack-414814"
 LOCATION = "us-central1"
@@ -35,32 +38,6 @@ def extract_dynamic_keys_and_values(obj):
                 data[f"{key}.{nested_key}"] = nested_value
     return data
 
-def perform_tests(data):
-    """
-    Extracts key-value pairs, performs tests, and compares with expected values.
- 
-    Args:
-        data (list): A list of dictionaries containing test cases.
- 
-    Returns:
-        list: A list of dictionaries with test results for each case.
-    """
-    results = []
-    for item in data:
-        key_value_pairs = extract_dynamic_keys_and_values(item)
-        # Assume you have a separate function named `your_test_function`
-        # that takes the extracted values as input and performs testing.
-        test_result = divide_numbers(**key_value_pairs["input"])
-        passed = test_result == key_value_pairs["expected"]
-        result = {
-            "input": key_value_pairs["input"],
-            "expected": key_value_pairs["expected"],
-            "result": test_result,
-            "passed": passed
-        }
-        results.append(result)
-    return results
-
 # Allow user to upload a Python file
 uploaded_file = st.file_uploader("Upload a Python file")
 file_content = ""
@@ -75,7 +52,7 @@ if uploaded_file is not None:
         # 5. Generate unique filename
         filename = f"{uploaded_file.name}"
         # Write on local
-        with open('temp/'+str(random_uuid_1)+'.py', mode="wb") as f:
+        with open('code_files/'+str(random_uuid_1)+'.py', mode="wb") as f:
             f.write(code_bytes)        
         # Print success message
         st.success(f"File uploaded successfully: {filename}")
@@ -90,11 +67,12 @@ if uploaded_file is not None:
     """ + file_content
     testcases = model.generate_content(prompt, stream=True)
     for testcase in testcases:
-        with open('temp/'+random_uuid_2, 'a') as f:
+        with open('test_cases/'+random_uuid_2, 'a') as f:
             f.write(testcase.text)  
-    f = open('temp/'+random_uuid_2, "r")
+    f = open('test_cases/'+random_uuid_2, "r")
     st.write(f.read())
-    files = glob.glob('temp/*')
+
+    files = glob.glob('test_cases/*')
     for f in files:
         os.remove(f)
 
