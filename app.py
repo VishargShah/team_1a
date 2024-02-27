@@ -12,7 +12,7 @@ import imports, uuid
 import vertexai
 from vertexai.generative_models import GenerationConfig, GenerativeModel, Image, Part
 
-PROJECT_ID = "skilled-box-414804"
+PROJECT_ID = "b-hack-414814"
 LOCATION = "us-central1"
 vertexai.init(project=PROJECT_ID, location=LOCATION)
 
