@@ -23,6 +23,44 @@ vertexai.init(project=PROJECT_ID, location=LOCATION)
 random_uuid_1 = uuid.uuid4()
 random_uuid_2 = str(random_uuid_1) + "test_cases.text"
 model = GenerativeModel("gemini-1.0-pro")
+
+def extract_dynamic_keys_and_values(obj):
+    data = {}
+    for key, value in obj.items():
+        data[key] = value
+        if isinstance(value, dict):
+            nested_data = extract_dynamic_keys_and_values(value)  # Recursive call
+            # Update data with key-value pairs from nested data
+            for nested_key, nested_value in nested_data.items():
+                data[f"{key}.{nested_key}"] = nested_value
+    return data
+
+def perform_tests(data):
+    """
+    Extracts key-value pairs, performs tests, and compares with expected values.
+ 
+    Args:
+        data (list): A list of dictionaries containing test cases.
+ 
+    Returns:
+        list: A list of dictionaries with test results for each case.
+    """
+    results = []
+    for item in data:
+        key_value_pairs = extract_dynamic_keys_and_values(item)
+        # Assume you have a separate function named `your_test_function`
+        # that takes the extracted values as input and performs testing.
+        test_result = divide_numbers(**key_value_pairs["input"])
+        passed = test_result == key_value_pairs["expected"]
+        result = {
+            "input": key_value_pairs["input"],
+            "expected": key_value_pairs["expected"],
+            "result": test_result,
+            "passed": passed
+        }
+        results.append(result)
+    return results
+
 # Allow user to upload a Python file
 uploaded_file = st.file_uploader("Upload a Python file")
 file_content = ""
@@ -37,14 +75,16 @@ if uploaded_file is not None:
         # 5. Generate unique filename
         filename = f"{uploaded_file.name}"
         # Write on local
-        with open('temp/'+str(random_uuid_1)+'.text', mode="wb") as f:
+        with open('temp/'+str(random_uuid_1)+'.py', mode="wb") as f:
             f.write(code_bytes)        
         # Print success message
         st.success(f"File uploaded successfully: {filename}")
     else:
         st.info("Please upload a .py file.")
     # Optionally, display the code content
+    st.header("Below is the input Code:")
     st.code(file_content, language="python")
+    st.header("Below are the Test Cases:")
     prompt = """write test cases in .json for below python code """ + """
      
     """ + file_content
@@ -54,7 +94,6 @@ if uploaded_file is not None:
             f.write(testcase.text)  
     f = open('temp/'+random_uuid_2, "r")
     st.write(f.read())
-    
     files = glob.glob('temp/*')
     for f in files:
         os.remove(f)
