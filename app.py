@@ -8,7 +8,7 @@ Created on Tue Feb 27 06:27:57 2024
 import streamlit as st
 import pandas as pd
 from io import StringIO
-import imports
+import imports, uuid
 import vertexai
 from vertexai.generative_models import GenerationConfig, GenerativeModel, Image, Part
 
@@ -27,7 +27,6 @@ if uploaded_file is not None:
     exec(file_content)
     # Optionally, display the code content
     st.code(file_content, language="python")
-    print(file_content)
 
 
 prompt = """write test cases in .json for below python code """ + """
@@ -36,9 +35,9 @@ prompt = """write test cases in .json for below python code """ + """
 
 testcases = model.generate_content(prompt, stream=True)
 
-
+random_uuid = uuid.uuid4()
 for testcase in testcases:
-    with open('test_cases.text', 'a') as f:
+    with open(random_uuid+'.text', 'a') as f:
         f.write(testcase.text)  
     
 st.write(testcase.text)    
