@@ -27,6 +27,10 @@ random_uuid_1 = uuid.uuid4()
 random_uuid_2 = str(random_uuid_1) + "test_cases.text"
 model = GenerativeModel("gemini-1.0-pro")
 
+def Convert(string):
+    li = list(string.split(" "))
+    return li
+
 def extract_dynamic_keys_and_values(obj):
     data = {}
     for key, value in obj.items():
@@ -53,6 +57,7 @@ def perform_tests(func, data):
     data = data[7:]
     data = data[:-3]
     data = list(data)
+    print(Convert(data))
     print(data)
     print(type(data))
     for item in data:
