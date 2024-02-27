@@ -98,11 +98,7 @@ if uploaded_file is not None:
     testcases = model.generate_content(prompt, stream=True)
     for testcase in testcases:
         with open('test_cases/'+random_uuid_2, 'a') as f:
-            #f.write(testcase.text)
-            lines = f.readlines()
-            f.seek(0)
-            f.truncate()
-            f.writelines(lines[1:])   
+            f.write(testcase.text)
     f = open('test_cases/'+random_uuid_2, "r")
     st.write(f.read())
     
