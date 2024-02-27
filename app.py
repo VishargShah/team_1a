@@ -46,11 +46,9 @@ prompt = """write test cases in .json for below python code """ + """
 """ + file_content
 
 testcases = model.generate_content(prompt, stream=True)
-
 for testcase in testcases:
+    st.write(testcase.text, end="")
     with open(str(random_uuid)+'.text', 'a') as f:
-        f.write(testcase.text)
-st.write(str(testcase.text))    
-
+        f.write(testcase.text)  
    
  
