@@ -8,9 +8,14 @@ Created on Tue Feb 27 06:27:57 2024
 import streamlit as st
 import pandas as pd
 from io import StringIO
-import imports, uuid
-import vertexai
+import imports, uuid, os
+from pathlib import Path as p
+import vertexai, glob
 from vertexai.generative_models import GenerationConfig, GenerativeModel, Image, Part
+
+#Initializing Directory
+data_folder = p.cwd() / "temp"
+p(data_folder).mkdir(parents=True, exist_ok=True)
 
 PROJECT_ID = "b-hack-414814"
 LOCATION = "us-central1"
@@ -31,7 +36,7 @@ if uploaded_file is not None:
         # 5. Generate unique filename
         filename = f"{uploaded_file.name}"
         # Write on local
-        with open(str(random_uuid)+'.text', mode="wb") as f:
+        with open('temp/'+str(random_uuid)+'.text', mode="wb") as f:
             f.write(code_bytes)        
         # Print success message
         st.success(f"File uploaded successfully: {filename}")
@@ -48,7 +53,11 @@ prompt = """write test cases in .json for below python code """ + """
 testcases = model.generate_content(prompt, stream=True)
 for testcase in testcases:
     st.write(testcase.text, end="")
-    with open(str(random_uuid)+'.text', 'a') as f:
+    with open('temp/'+str(random_uuid)+'.text', 'a') as f:
         f.write(testcase.text)  
-   
+
+files = glob.glob('temp/*')
+for f in files:
+    os.remove(f)
+
  
