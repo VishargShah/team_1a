@@ -56,7 +56,6 @@ def perform_tests(func, data):
     results = []
     data = data[7:]
     data = data[:-3]
-    data = list(data)
     print(Convert(data))
     print(data)
     print(type(data))
