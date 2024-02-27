@@ -29,7 +29,7 @@ if uploaded_file is not None:
     # Get the content of the file as a string
     file_content = uploaded_file.getvalue().decode("utf-8")
     # Execute the code dynamically
-    exec(file_content)
+    #exec(file_content)
     if uploaded_file is not None:
         # Read audio file:
         code_bytes = uploaded_file.read()
@@ -52,9 +52,10 @@ prompt = """write test cases in .json for below python code """ + """
 
 testcases = model.generate_content(prompt, stream=True)
 for testcase in testcases:
-    st.write(testcase.text, end="")
     with open('temp/'+str(random_uuid)+'.text', 'a') as f:
         f.write(testcase.text)  
+f = open('temp/'+str(random_uuid)+'.text', "r")
+st.write('temp/'+str(random_uuid)+'.text'.read())
 
 files = glob.glob('temp/*')
 for f in files:
