@@ -25,14 +25,14 @@ if uploaded_file is not None:
     file_content = uploaded_file.getvalue().decode("utf-8")
     # Execute the code dynamically
     exec(file_content)
-    random_uuid_1 = uuid.uuid4()
+    random_uuid = uuid.uuid4()
     if uploaded_file is not None:
         # Read audio file:
         code_bytes = uploaded_file.read()
         # 5. Generate unique filename
         filename = f"{uploaded_file.name}"
         # Write on local
-        with open(str(random_uuid_1)+'.text', mode="wb") as f:
+        with open(str(random_uuid)+'.text', mode="wb") as f:
             f.write(code_bytes)        
         # Print success message
         st.success(f"File uploaded successfully: {filename}")
@@ -47,12 +47,11 @@ prompt = """write test cases in .json for below python code """ + """
 """ + file_content
 
 testcases = model.generate_content(prompt, stream=True)
-random_uuid_2 = uuid.uuid4()
 
 for testcase in testcases:
-    with open(str(random_uuid_2)+'.text', 'a') as f:
+    with open(str(random_uuid)+'.text', 'a') as f:
         f.write(testcase.text)
-st.write(testcase.text)    
+st.write(str(testcase.text))    
 
    
  
